@@ -1,8 +1,9 @@
 package com.yearup.controller;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,28 +20,28 @@ public class PollController {
 	private PollService pollService;
 	
 	@RequestMapping(value="/polls", method=RequestMethod.GET)
-	public ResponseEntity<Iterable<Poll>> getAllPolls() {
+	public Iterable<Poll> getAllPolls() {
 		return pollService.getAllPolls();
 	}
 	
 	@RequestMapping(value="/polls", method=RequestMethod.POST)
-	public ResponseEntity<?> createPoll(@RequestBody Poll poll) {
-		return pollService.createPoll(poll);
+	public void createPoll(@RequestBody Poll poll) {
+		pollService.createPoll(poll);
 	}
 	
 	@RequestMapping(value="/polls/{pollId}", method=RequestMethod.GET)
-	public ResponseEntity<?> getPoll(@PathVariable Long pollId) {
+	public Optional<Poll> getPoll(@PathVariable Long pollId) {
 		return pollService.getPoll(pollId);
 	}
 	
 	@RequestMapping(value="/polls/{pollId}", method=RequestMethod.PUT)
-	public ResponseEntity<?> updatePoll(@RequestBody Poll poll, @PathVariable Long pollId) {
-		return pollService.updatePoll(poll, pollId);
+	public void updatePoll(@RequestBody Poll poll, @PathVariable Long pollId) {
+		pollService.updatePoll(poll, pollId);
 	}
 	
 	@RequestMapping(value="/polls/{pollId}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deletePoll(@PathVariable Long pollId) {
-		return pollService.deletePoll(pollId);
+	public void deletePoll(@PathVariable Long pollId) {
+		pollService.deletePoll(pollId);
 	}
 	
  

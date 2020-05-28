@@ -6,14 +6,11 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yearup.domain.Poll;
+import com.yearup.exception.ResourceNotFoundException;
 import com.yearup.repository.PollRepository;
 
 @Service
@@ -22,13 +19,11 @@ public class PollService {
 	@Inject
 	private PollRepository pollRepository;
 	
-	
-	public ResponseEntity<Iterable<Poll>> getAllPolls() {
-		Iterable<Poll> allPolls = pollRepository.findAll();
-		return new ResponseEntity<>(pollRepository.findAll(), HttpStatus.OK);
+	public Iterable<Poll> getAllPolls() {
+		return pollRepository.findAll();
 	}
 	
-	public ResponseEntity<?> createPoll(Poll poll) {
+	public void createPoll(Poll poll) {
 		poll = pollRepository.save(poll);
 		
 		// Set the location header for the newly created resource
@@ -39,23 +34,28 @@ public class PollService {
 											  .buildAndExpand(poll.getId())
 											  .toUri();
 		responseHeaders.setLocation(newPollUri);
-		
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
 	}
 	
-	public ResponseEntity<?> getPoll(Long pollId) {
-		Optional<Poll> p = pollRepository.findById(pollId);
-		return new ResponseEntity<>(p, HttpStatus.OK);
+	protected void verifyPoll(Long pollId) throws ResourceNotFoundException {
+		Optional<Poll> poll = pollRepository.findById(pollId);
+		if(poll == null) {
+			throw new ResourceNotFoundException("Poll with id " + pollId + " not found"); 
+		}
 	}
 	
-	public ResponseEntity<?> updatePoll(Poll poll, Long pollId) {
-		Poll p = pollRepository.save(poll);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public Optional<Poll> getPoll(Long pollId) {
+		verifyPoll(pollId);
+		return pollRepository.findById(pollId);
 	}
 	
-	public ResponseEntity<?> deletePoll(@PathVariable Long pollId) {
+	public void updatePoll(Poll poll, Long pollId) {
+		verifyPoll(pollId);
+		pollRepository.save(poll);
+	}
+	
+	public void deletePoll(Long pollId) {
+		verifyPoll(pollId);
 		pollRepository.deleteById(pollId);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
