@@ -20,7 +20,7 @@ public class ComputeResultService {
 	@Inject
 	private VoteRepository voteRepository;
 	
-	public ResponseEntity<?> computeResult(Long pollId) {
+	public void computeResult(Long pollId) {
 		VoteResult voteResult = new VoteResult();
 		Iterable<Vote> allVotes = voteRepository.findByPoll(pollId);
 		
@@ -39,10 +39,5 @@ public class ComputeResultService {
 		}
 		voteResult.setTotalVotes(totalVotes);
 		voteResult.setResults(tempMap.values());
-		
-		return new ResponseEntity<VoteResult>(voteResult, HttpStatus.OK);
 	}
-	
-	
-
 }

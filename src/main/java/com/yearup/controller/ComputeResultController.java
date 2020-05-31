@@ -18,8 +18,8 @@ public class ComputeResultController {
 	
 	
 	@RequestMapping(value="/computeresult", method=RequestMethod.GET)
-	public ResponseEntity<?> computeResult(@RequestParam Long pollId) {
-		return computeResultService.computeResult(pollId);
+	public void computeResult(@RequestParam Long pollId) {
+		computeResultService.computeResult(pollId);
 	}
 
 }
