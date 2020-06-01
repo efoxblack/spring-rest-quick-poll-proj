@@ -6,8 +6,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,7 +23,7 @@ public class PollService {
 		return pollRepository.findAll();
 	}
 	
-	public ResponseEntity<?> createPoll(Poll poll) {
+	public void createPoll(Poll poll) {
 		poll = pollRepository.save(poll);
 		
 		// Set the location header for the newly created resource
@@ -36,7 +34,6 @@ public class PollService {
 											  .buildAndExpand(poll.getId())
 											  .toUri();
 		responseHeaders.setLocation(newPollUri);
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
 	}
 	
 	protected void verifyPoll(Long pollId) throws ResourceNotFoundException {
