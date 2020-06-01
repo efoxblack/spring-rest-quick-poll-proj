@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.yearup.domain.Vote;

@@ -2,6 +2,7 @@ package com.yearup.controller;
 
 import javax.inject.Inject;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,13 +20,15 @@ public class VoteController {
 	private VoteService voteService;
 	
 	@RequestMapping(value="/polls/{pollId}/votes", method=RequestMethod.GET)
-	public Iterable<Vote> getAllVotes(@PathVariable Long pollId) {
-		return voteService.getAllVotesByPollId(pollId);
+	public ResponseEntity<Iterable<Vote>> getAllVotes(@PathVariable Long pollId) {
+		Iterable<Vote> v = voteService.getAllVotesByPollId(pollId);
+		return new ResponseEntity<>(v, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/polls/{pollId}/votes", method=RequestMethod.POST)
 	public ResponseEntity<?> createVote(@PathVariable Long pollId, @RequestBody Vote vote) {
-		return voteService.createVote(pollId, vote);
+		voteService.createVote(pollId, vote);
+		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
 
 }

@@ -3,8 +3,6 @@ package com.yearup.service;
 import javax.inject.Inject;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,13 +19,12 @@ public class VoteService {
 		return voteRepository.findByPoll(pollId);
 	}
 	
-	public ResponseEntity<?> createVote(Long pollId, Vote vote) {
+	public void createVote(Long pollId, Vote vote) {
 		vote = voteRepository.save(vote);
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setLocation(ServletUriComponentsBuilder.
 		fromCurrentRequest().path("/{id}").buildAndExpand(vote.getId()).toUri());
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
 	}
 
 }

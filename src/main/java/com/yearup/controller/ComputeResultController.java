@@ -2,6 +2,7 @@ package com.yearup.controller;
 
 import javax.inject.Inject;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,8 +19,9 @@ public class ComputeResultController {
 	
 	
 	@RequestMapping(value="/computeresult", method=RequestMethod.GET)
-	public void computeResult(@RequestParam Long pollId) {
+	public ResponseEntity<?> computeResult(@RequestParam Long pollId) {
 		computeResultService.computeResult(pollId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
