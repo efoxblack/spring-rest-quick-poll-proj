@@ -3,10 +3,9 @@ package com.yearup.controller;
 import java.net.URI;
 import java.util.Optional;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
-import com.yearup.repository.VoteRepository;
+import com.yearup.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PollController {
 
 	@Autowired
-	private VoteRepository voteRepository;
+	private VoteService voteService;
 	
 	@Autowired
 	private PollService pollService;
