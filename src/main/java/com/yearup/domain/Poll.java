@@ -2,29 +2,26 @@ package com.yearup.domain;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Poll {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="POLL_ID")
 	private Long id;
 	
 	@Column(name="QUESTION")
+	@NotEmpty
 	private String question;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="POLL_ID")
 	@OrderBy
+	@Size(min = 2, max = 6)
 	private Set<Option> options;
 
 	public Long getId() {
@@ -50,6 +47,13 @@ public class Poll {
 	public void setOptions(Set<Option> options) {
 		this.options = options;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Poll{" +
+				"id=" + id +
+				", question='" + question + '\'' +
+				", options=" + options +
+				'}';
+	}
 }

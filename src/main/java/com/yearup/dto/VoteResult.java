@@ -19,6 +19,12 @@ public class VoteResult {
 	public void setResults(Collection<OptionCount> results) {
 		this.results = results;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "VoteResult{" +
+				"totalVotes=" + totalVotes +
+				", results=" + results +
+				'}';
+	}
 }

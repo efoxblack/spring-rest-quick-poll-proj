@@ -1,13 +1,13 @@
 package com.yearup.service;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
-import org.springframework.http.HttpHeaders;
+import com.yearup.domain.Vote;
+import com.yearup.repository.VoteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yearup.domain.Poll;
 import com.yearup.exception.ResourceNotFoundException;
@@ -16,45 +16,43 @@ import com.yearup.repository.PollRepository;
 @Service
 public class PollService {
 	
-	@Inject
+	@Autowired
 	private PollRepository pollRepository;
+
+	@Autowired
+	private VoteRepository voteRepository;
 	
 	public Iterable<Poll> getAllPolls() {
-		return pollRepository.findAll();
+		List<Poll> pollList = new ArrayList<>();
+		pollRepository.findAll().forEach(pollList::add);
+		return pollList;
 	}
 	
 	public void createPoll(Poll poll) {
-		poll = pollRepository.save(poll);
-		
-		// Set the location header for the newly created resource
-		HttpHeaders responseHeaders = new HttpHeaders();
-		URI newPollUri = ServletUriComponentsBuilder
-											  .fromCurrentRequest()
-											  .path("/{id}")
-											  .buildAndExpand(poll.getId())
-											  .toUri();
-		responseHeaders.setLocation(newPollUri);
+		pollRepository.save(poll);
 	}
 	
 	protected void verifyPoll(Long pollId) throws ResourceNotFoundException {
 		Optional<Poll> poll = pollRepository.findById(pollId);
-		if(poll == null) {
+		if(!poll.isPresent()) {
 			throw new ResourceNotFoundException("Poll with id " + pollId + " not found"); 
 		}
 	}
 	
-	public Optional<Poll> getPoll(Long pollId) {
+	public Optional<Poll> getPollById(Long pollId) {
 		verifyPoll(pollId);
 		return pollRepository.findById(pollId);
 	}
 	
-	public Poll updatePoll(Poll poll, Long pollId) {
+	public void updatePoll(Poll poll, Long pollId) {
 		verifyPoll(pollId);
-		return pollRepository.save(poll);
+		pollRepository.save(poll);
 	}
 	
 	public void deletePoll(Long pollId) {
 		verifyPoll(pollId);
+		Iterable<Vote> vote = voteRepository.findByPoll(pollId);
+		voteRepository.deleteAll(vote);
 		pollRepository.deleteById(pollId);
 	}
 
